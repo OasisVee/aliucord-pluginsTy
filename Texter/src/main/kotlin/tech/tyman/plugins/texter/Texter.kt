@@ -34,24 +34,24 @@ class Texter : Plugin() {
                 )
         ) { ctx: CommandContext -> getResult(Maps.emojiLetters, ctx.getString("text")!!) }
         registerConverterCommand(
-                "stylized",
-                "Converts your text into stylized characters"
-        ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.toStylized()) }
+                "japanese",
+                "Converts your text into Japanese-style characters", emptyList()
+        ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.toJapanese()) }
         registerConverterCommand(
                 "clap",
-                "Adds clapping icons to your text"
+                "Adds clapping icons to your text", emptyList()
         ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.clapify()) }
         registerConverterCommand(
                 "reverse",
-                "Reverses your text"
+                "Reverses your text", emptyList()
         ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.reverse()) }
         registerConverterCommand(
                 "space",
-                "Spaces out your text"
+                "Spaces out your text", emptyList()
         ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.chunked(1).joinToString(" ")) }
         registerConverterCommand(
                 "mock",
-                "Capitalizes random parts of your text"
+                "Capitalizes random parts of your text", emptyList()
         ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.mock()) }
         registerConverterCommand(
                 "leet",
@@ -61,19 +61,19 @@ class Texter : Plugin() {
         ) { ctx: CommandContext -> getResult(Maps.leetLetters, ctx.getString("text")!!) }
         registerConverterCommand(
                 "piglatin",
-                "Converts your text to Pig Latin"
+                "Converts your text to Pig Latin", emptyList()
         ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.toPigLatin()) }
         registerConverterCommand(
                 "binary",
-                "Converts your text to binary"
+                "Converts your text to binary", emptyList()
         ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.toBinary()) }
         registerConverterCommand(
                 "morse",
-                "Converts your text to Morse code"
+                "Converts your text to Morse code", emptyList()
         ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.toMorseCode()) }
         registerConverterCommand(
                 "wave",
-                "Adds a wave effect to your text"
+                "Adds a wave effect to your text", emptyList()
         ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.toWave()) }
     }
 
@@ -127,15 +127,15 @@ class Texter : Plugin() {
         }
     }
 
-    private fun String.toStylized(): String {
-        val styles = listOf(
-            { c: Char -> c.toUpperCase() },
-            { c: Char -> c.toLowerCase() },
-            { c: Char -> if (c.isLetter()) c + 0x1D400 - 'A' else c }, // Math Bold
-            { c: Char -> if (c.isLetter()) c + 0x1D56C - 'A' else c }  // Math Bold Italic
+    private fun String.toJapanese(): String {
+        val japaneseMap = mapOf(
+            'a' to '卂', 'b' to '乃', 'c' to '匚', 'd' to '刀', 'e' to '乇', 'f' to '千', 'g' to '厶',
+            'h' to '卄', 'i' to '丨', 'j' to 'ﾌ', 'k' to 'Ҝ', 'l' to 'ㄥ', 'm' to '爪', 'n' to '几',
+            'o' to 'ㄖ', 'p' to '卩', 'q' to 'Ɋ', 'r' to '尺', 's' to '丂', 't' to 'ㄒ', 'u' to 'ㄩ',
+            'v' to 'ᐯ', 'w' to '山', 'x' to '乂', 'y' to 'ㄚ', 'z' to '乙'
         )
-        return this.mapIndexed { index, char ->
-            styles[index % styles.size](char)
+        return this.map {
+            japaneseMap[it.lowercaseChar()] ?: it
         }.joinToString("")
     }
 
