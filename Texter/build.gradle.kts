@@ -1,6 +1,8 @@
-version = "1.0.3"
+version = "1.0.4"
 description = "A plugin to modify text formatting inspired by plugins like BetterFormattingRedux (for BetterDiscord) and texter (for Powercord)"
 aliucord.changelog.set("""
+    # Version 1.0.4
+    * Added logic to automatically convert to and from binary
     # Version 1.0.3
     * Updated for new discord/aliucord version
     # Version 1.0.2

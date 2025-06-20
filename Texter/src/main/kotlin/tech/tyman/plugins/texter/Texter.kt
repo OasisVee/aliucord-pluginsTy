@@ -65,8 +65,8 @@ class Texter : Plugin() {
         ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.toPigLatin()) }
         registerConverterCommand(
                 "binary",
-                "Converts your text to binary", emptyList()
-        ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.toBinary()) }
+                "Converts text to binary or binary back to text", emptyList()
+        ) { ctx: CommandContext -> getResult(ctx.getString("text")!!.toBinaryOrFromBinary()) }
         registerConverterCommand(
                 "morse",
                 "Converts your text to Morse code", emptyList()
@@ -142,6 +142,39 @@ class Texter : Plugin() {
     private fun String.toBinary(): String {
         return this.toByteArray().joinToString(" ") {
             it.toString(2).padStart(8, '0')
+        }
+    }
+
+    private fun String.fromBinary(): String {
+        return try {
+            this.split(" ").map { binaryString ->
+                binaryString.toInt(2).toChar()
+            }.joinToString("")
+        } catch (e: Exception) {
+            "Error: Invalid binary format"
+        }
+    }
+
+    private fun String.isBinary(): Boolean {
+        val trimmed = this.trim()
+        if (trimmed.isEmpty()) return false
+        
+        // Check if it contains only 0s, 1s, and spaces
+        val validChars = trimmed.all { it == '0' || it == '1' || it == ' ' }
+        if (!validChars) return false
+        
+        // Check if it has the typical binary format (groups of 8 bits separated by spaces)
+        val binaryGroups = trimmed.split(" ")
+        return binaryGroups.isNotEmpty() && binaryGroups.all { group ->
+            group.isNotEmpty() && group.all { it == '0' || it == '1' } && group.length <= 8
+        }
+    }
+
+    private fun String.toBinaryOrFromBinary(): String {
+        return if (this.isBinary()) {
+            this.fromBinary()
+        } else {
+            this.toBinary()
         }
     }
 
